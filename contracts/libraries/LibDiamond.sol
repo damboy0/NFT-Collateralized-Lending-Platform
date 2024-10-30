@@ -47,6 +47,27 @@ library LibDiamond {
         mapping(bytes4 => bool) supportedInterfaces;
         // owner of the contract
         address contractOwner;
+
+        // Token name
+        string _name;
+        // Token symbol
+        string _symbol;
+        mapping(uint256 tokenId => address) _owners;
+        mapping(address owner => uint256) _balances;
+        mapping(uint256 tokenId => address) _tokenApprovals;
+        mapping(address owner => mapping(address operator => bool)) _operatorApprovals;
+        // whitelisted ERC20s avaliable for lending
+        mapping(address tokenAddress => bool isWhitelisted) whitelistedERC20s;
+        // whitelisted ERC721s avaliable for collateral
+        mapping(address nftAddress => bool isWhitelisted) whitelistedERC721s;
+        // Counter for loan IDs
+        uint256 loanId;
+        uint256 listingId;
+        uint256 offerId;
+        // loanid to  Loan struct
+        mapping(uint256 loanId => Loan loan) loans;
+        mapping(uint256 listingId => Listing listing) listings;
+        mapping(uint256 offerId => Offer offer) offers;
     }
 
     function diamondStorage()
