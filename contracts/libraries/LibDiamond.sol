@@ -34,6 +34,17 @@ library LibDiamond {
         uint256 facetAddressPosition; // position of facetAddress in facetAddresses array
     }
 
+     struct Loan {
+        address borrower;
+        address nftContract;
+        uint256 tokenId;
+        uint256 loanAmount;
+        uint256 interestRate; // basis points (e.g., 5% would be 500)
+        uint256 duration;     // loan duration in seconds
+        uint256 startTime;    // timestamp when the loan was issued
+        bool isRepaid;        // to track repayment status
+    }
+
     struct DiamondStorage {
         // maps function selector to the facet address and
         // the position of the selector in the facetFunctionSelectors.selectors array
@@ -48,26 +59,19 @@ library LibDiamond {
         // owner of the contract
         address contractOwner;
 
-        // Token name
-        string _name;
-        // Token symbol
-        string _symbol;
-        mapping(uint256 tokenId => address) _owners;
-        mapping(address owner => uint256) _balances;
-        mapping(uint256 tokenId => address) _tokenApprovals;
-        mapping(address owner => mapping(address operator => bool)) _operatorApprovals;
-        // whitelisted ERC20s avaliable for lending
-        mapping(address tokenAddress => bool isWhitelisted) whitelistedERC20s;
-        // whitelisted ERC721s avaliable for collateral
-        mapping(address nftAddress => bool isWhitelisted) whitelistedERC721s;
-        // Counter for loan IDs
-        uint256 loanId;
-        uint256 listingId;
-        uint256 offerId;
-        // loanid to  Loan struct
-        mapping(uint256 loanId => Loan loan) loans;
-        mapping(uint256 listingId => Listing listing) listings;
-        mapping(uint256 offerId => Offer offer) offers;
+         // Loan mapping from unique ID (incremented counter) to Loan struct
+        mapping(uint256 => Loan) loans;
+        
+        // Mapping from borrower to loan IDs (supports multiple loans per borrower)
+        mapping(address => uint256[]) borrowerLoans;
+        
+        // NFT ownership mapping to ensure an NFT can be collateralized only once
+        mapping(address => mapping(uint256 => bool)) isNFTCollateralized;
+        
+        // Loan counter for unique loan IDs
+        uint256 loanCounter;
+        
+        
     }
 
     function diamondStorage()
