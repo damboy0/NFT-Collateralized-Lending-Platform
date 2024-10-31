@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-// import "../interfaces/IERC721.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
-contract ERC721Facet is IERC721 {
+contract ERC721Facet is IERC165, IERC721 {
     string public name;
     string public symbol;
     mapping(uint256 => address) private _owners;
@@ -12,6 +12,7 @@ contract ERC721Facet is IERC721 {
     mapping(uint256 => address) private _tokenApprovals;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
     uint256 private _tokenIdCounter;
+    uint256 private _totalSupply;
 
     constructor(string memory _name, string memory _symbol) {
         name = _name;
@@ -69,11 +70,15 @@ contract ERC721Facet is IERC721 {
         emit Transfer(from, to, tokenId);
     }
 
+    function totalSupply() public view returns (uint256) {
+    return _totalSupply;
+}
+
     function mint(address to) public {
         require(to != address(0), "Mint to the zero address");
 
         uint256 tokenId = _tokenIdCounter;
-        _tokenIdCounter += 1; // Manually increment the counter
+        _tokenIdCounter += 1;
 
         require(!_exists(tokenId), "Token already minted");
 
@@ -81,6 +86,9 @@ contract ERC721Facet is IERC721 {
 
         _balances[to] += 1;
         _owners[tokenId] = to;
+
+        // Increment the total supply on minting
+        _totalSupply += 1;
 
         emit Transfer(address(0), to, tokenId);
     }
@@ -96,4 +104,18 @@ contract ERC721Facet is IERC721 {
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual {}
+
+    function safeTransferFrom(address from, address to, uint256 tokenId) external override {
+        transferFrom(from, to, tokenId);
+        // Additional checks can be added here if necessary
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external override {
+        transferFrom(from, to, tokenId);
+        // Add logic for handling the data parameter if required
+    }
+
+    function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
+        return interfaceId == type(IERC721).interfaceId || interfaceId == type(IERC165).interfaceId;
+    }
 }

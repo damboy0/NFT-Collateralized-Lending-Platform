@@ -2,28 +2,28 @@
 pragma solidity ^0.8.0;
 
 interface ILoanFacet {
-    event LoanCreated(
-        uint256 indexed loanId,
-        address indexed borrower,
-        address nftContract,
-        uint256 tokenId,
-        uint256 loanAmount,
-        uint256 interestRate,
-        uint256 duration
-    );
+    // event LoanCreated(
+    //     uint256 indexed loanId,
+    //     address indexed borrower,
+    //     address nftContract,
+    //     uint256 tokenId,
+    //     uint256 loanAmount,
+    //     uint256 interestRate,
+    //     uint256 duration
+    // );
 
-    event LoanRepaid(
-        uint256 indexed loanId,
-        address indexed borrower,
-        uint256 repaymentAmount
-    );
+    // event LoanRepaid(
+    //     uint256 indexed loanId,
+    //     address indexed borrower,
+    //     uint256 repaymentAmount
+    // );
 
-    event CollateralReleased(
-        uint256 indexed loanId,
-        address indexed borrower,
-        address nftContract,
-        uint256 tokenId
-    );
+    // event CollateralReleased(
+    //     uint256 indexed loanId,
+    //     address indexed borrower,
+    //     address nftContract,
+    //     uint256 tokenId
+    // );
 
     function initializeLoanToken(address _tokenAddress) external;
 

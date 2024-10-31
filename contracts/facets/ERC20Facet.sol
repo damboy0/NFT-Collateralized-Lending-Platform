@@ -29,16 +29,27 @@ contract ERC20Facet is IERC20{
         return _balances[account];
     }
 
+    // function transfer(address recipient, uint256 amount) public override returns (bool) {
+    //     require(recipient != address(0), "Transfer to the zero address");
+    //     require(_balances[msg.sender] >= amount, "Insufficient balance");
+
+    //     _balances[msg.sender] = _balances[msg.sender].sub(amount);
+    //     _balances[recipient] = _balances[recipient].add(amount);
+
+    //     emit Transfer(msg.sender, recipient, amount);
+    //     return true;
+    // }
     function transfer(address recipient, uint256 amount) public override returns (bool) {
-        require(recipient != address(0), "Transfer to the zero address");
-        require(_balances[msg.sender] >= amount, "Insufficient balance");
+    require(recipient != address(0), "Transfer to the zero address");
+    require(_balances[msg.sender] >= amount, "Insufficient balance");
 
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        _balances[recipient] = _balances[recipient].add(amount);
+    _balances[msg.sender] -= amount;
+    _balances[recipient] += amount;
 
-        emit Transfer(msg.sender, recipient, amount);
-        return true;
-    }
+    emit Transfer(msg.sender, recipient, amount);
+    return true;
+}
+
 
     function approve(address spender, uint256 amount) public override returns (bool) {
         require(spender != address(0), "Approve to the zero address");
@@ -52,26 +63,51 @@ contract ERC20Facet is IERC20{
         return _allowances[owner][spender];
     }
 
+    // function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    //     require(sender != address(0), "Transfer from the zero address");
+    //     require(recipient != address(0), "Transfer to the zero address");
+    //     require(_balances[sender] >= amount, "Insufficient balance");
+    //     require(_allowances[sender][msg.sender] >= amount, "Allowance exceeded");
+
+    //     _balances[sender] = _balances[sender].sub(amount);
+    //     _balances[recipient] = _balances[recipient].add(amount);
+    //     _allowances[sender][msg.sender] = _allowances[sender][msg.sender].sub(amount);
+
+    //     emit Transfer(sender, recipient, amount);
+    //     return true;
+    // }
+
     function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
-        require(sender != address(0), "Transfer from the zero address");
-        require(recipient != address(0), "Transfer to the zero address");
-        require(_balances[sender] >= amount, "Insufficient balance");
-        require(_allowances[sender][msg.sender] >= amount, "Allowance exceeded");
+    require(sender != address(0), "Transfer from the zero address");
+    require(recipient != address(0), "Transfer to the zero address");
+    require(_balances[sender] >= amount, "Insufficient balance");
+    require(_allowances[sender][msg.sender] >= amount, "Allowance exceeded");
 
-        _balances[sender] = _balances[sender].sub(amount);
-        _balances[recipient] = _balances[recipient].add(amount);
-        _allowances[sender][msg.sender] = _allowances[sender][msg.sender].sub(amount);
+    _balances[sender] -= amount;
+    _balances[recipient] += amount;
+    _allowances[sender][msg.sender] -= amount;
 
-        emit Transfer(sender, recipient, amount);
-        return true;
-    }
+    emit Transfer(sender, recipient, amount);
+    return true;
+}
+
+
+    // function mint(address account, uint256 amount) external {
+    //     require(account != address(0), "Mint to the zero address");
+
+    //     _totalSupply = _totalSupply.add(amount);
+    //     _balances[account] = _balances[account].add(amount);
+
+    //     emit Transfer(address(0), account, amount);
+    // }
 
     function mint(address account, uint256 amount) external {
-        require(account != address(0), "Mint to the zero address");
+    require(account != address(0), "Mint to the zero address");
 
-        _totalSupply = _totalSupply.add(amount);
-        _balances[account] = _balances[account].add(amount);
+    _totalSupply += amount; 
+    _balances[account] += amount; 
 
-        emit Transfer(address(0), account, amount);
-    }
+    emit Transfer(address(0), account, amount);
+}
+
 }
