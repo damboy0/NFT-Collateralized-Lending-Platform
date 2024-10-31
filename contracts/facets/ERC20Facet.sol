@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
-import "../interfaces/IERC20.sol";
+// import "../interfaces/IERC20.sol";
 
 contract ERC20Facet is IERC20{
     using Math for uint256;
@@ -36,7 +36,7 @@ contract ERC20Facet is IERC20{
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         _balances[recipient] = _balances[recipient].add(amount);
 
-        // emit Transfer(msg.sender, recipient, amount);
+        emit Transfer(msg.sender, recipient, amount);
         return true;
     }
 
@@ -44,7 +44,7 @@ contract ERC20Facet is IERC20{
         require(spender != address(0), "Approve to the zero address");
 
         _allowances[msg.sender][spender] = amount;
-        // emit Approval(msg.sender, spender, amount);
+        emit Approval(msg.sender, spender, amount);
         return true;
     }
 
@@ -62,7 +62,7 @@ contract ERC20Facet is IERC20{
         _balances[recipient] = _balances[recipient].add(amount);
         _allowances[sender][msg.sender] = _allowances[sender][msg.sender].sub(amount);
 
-        // emit Transfer(sender, recipient, amount);
+        emit Transfer(sender, recipient, amount);
         return true;
     }
 
@@ -72,6 +72,6 @@ contract ERC20Facet is IERC20{
         _totalSupply = _totalSupply.add(amount);
         _balances[account] = _balances[account].add(amount);
 
-        // emit Transfer(address(0), account, amount);
+        emit Transfer(address(0), account, amount);
     }
 }

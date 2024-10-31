@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "../interfaces/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+// import "../interfaces/IERC721.sol";
 
 contract ERC721Facet is IERC721 {
     string public name;
@@ -35,7 +35,7 @@ contract ERC721Facet is IERC721 {
         require(msg.sender == owner || isApprovedForAll(owner, msg.sender), "Not approved to manage this token");
 
         _tokenApprovals[tokenId] = to;
-        // emit Approval(owner, to, tokenId);
+        emit Approval(owner, to, tokenId);
     }
 
     function getApproved(uint256 tokenId) public view override returns (address) {
@@ -46,7 +46,7 @@ contract ERC721Facet is IERC721 {
     function setApprovalForAll(address operator, bool approved) public override {
         require(msg.sender != operator, "Cannot approve self");
         _operatorApprovals[msg.sender][operator] = approved;
-        // emit ApprovalForAll(msg.sender, operator, approved);
+        emit ApprovalForAll(msg.sender, operator, approved);
     }
 
     function isApprovedForAll(address owner, address operator) public view override returns (bool) {
@@ -66,7 +66,7 @@ contract ERC721Facet is IERC721 {
         _balances[to] += 1;
         _owners[tokenId] = to;
 
-        // emit Transfer(from, to, tokenId);
+        emit Transfer(from, to, tokenId);
     }
 
     function mint(address to) public {
@@ -82,7 +82,7 @@ contract ERC721Facet is IERC721 {
         _balances[to] += 1;
         _owners[tokenId] = to;
 
-        // emit Transfer(address(0), to, tokenId);
+        emit Transfer(address(0), to, tokenId);
     }
 
     function _exists(uint256 tokenId) internal view returns (bool) {

@@ -6,8 +6,7 @@ import "../contracts/facets/LoanFacet.sol";
 import "../contracts/facets/ERC20Facet.sol";
 import "../contracts/facets/ERC721Facet.sol";
 import "../contracts/libraries/LibDiamond.sol";
-// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
 
 contract LoanFacetTest is Test {
     LoanFacet loanFacet;
